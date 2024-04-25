@@ -90,7 +90,7 @@
         <h3>Basic Information</h3>
 
         <div class="profile-photo">
-            <img id="img" src="/user.png">
+            <img id="img" th:src="@{|${user.url != null ? user.url : '/image/user.png'}|}" style="border-radius:50%" />
         </div>
 
         <p>Username: <span th:text="${user.username}"></span></p>

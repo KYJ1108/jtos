@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
@@ -158,10 +157,16 @@ public class UserController {
     @PostMapping("/modifyProfile")
     public String changeProfile(Model model, Principal principal,
                                 @RequestParam("username") String username,
-                                @RequestParam("email") String email) {
+                                @RequestParam("email") String email,
+                                @RequestParam("file") MultipartFile file) {
         // 현재 로그인한 사용자의 아이디를 가져옴
+        SiteUser user = userService.getUser(principal.getName());
         String userId = principal.getName();
-
+        String url = null;
+         if(file.getContentType().contains("image")){
+             url = userService.temp_url(file);
+         }
+         userService.saveimage(user,url);
         // 사용자 정보 업데이트
         try {
             userService.updateProfile(userId, username, email);
@@ -175,29 +180,29 @@ public class UserController {
 
     }
 
-
-    @PostMapping("/image/upload")
-    public String uploadProfileImage(@RequestParam("imageFile")MultipartFile file) throws IOException {
-        // 파일명에서 공백 제거
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-        // 업로드 디렉토리 생성
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(uploadPath)){
-            Files.createDirectories(uploadPath);
-        }
-
-        // 파일 저장
-        Path filePath = uploadPath.relativize(Path.of(fileName));
-        Files.copy(file.getInputStream(), filePath);
-
-        // 파일 경로를 db에 저장
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/user/profile/image/")
-                .path(fileName)
-                .toUriString();
-        userService.saveImageFile(fileName);
-        return "profile_form";
-    }
+//
+//    @PostMapping("/image/upload")
+//    public String uploadProfileImage(@RequestParam("imageFile")MultipartFile file) throws IOException {
+//        // 파일명에서 공백 제거
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//
+//        // 업로드 디렉토리 생성
+//        Path uploadPath = Paths.get(UPLOAD_DIR);
+//        if (!Files.exists(uploadPath)){
+//            Files.createDirectories(uploadPath);
+//        }
+//
+//        // 파일 저장
+//        Path filePath = uploadPath.relativize(Path.of(fileName));
+//        Files.copy(file.getInputStream(), filePath);
+//
+//        // 파일 경로를 db에 저장
+//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/user/profile/image/")
+//                .path(fileName)
+//                .toUriString();
+//        userService.saveImageFile(fileName);
+//        return "profile_form";
+//    }
 
 }

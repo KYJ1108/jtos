@@ -8,11 +8,11 @@
     <div class="Basic">
         <h3>Basic Information</h3>
 
-        <form th:action="@{/user/modifyProfile}" method="post">
+        <form th:action="@{/user/modifyProfile}" method="post" enctype="multipart/form-data">
             <!-- 프로필 사진 수정 -->
             <div class="form-group">
-                <label for="profileImage">프로필 사진</label>
-                <input type="file" class="form-control-file" id="profileImage" name="profileImage">
+                <label for="file">프로필 사진</label>
+                <input type="file" class="form-control-file" id="file" name="file">
             </div>
 
             <!-- 유저 이름 수정 -->

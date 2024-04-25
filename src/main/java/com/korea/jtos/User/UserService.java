@@ -8,14 +8,15 @@ import com.korea.jtos.DataNotFoundException;
 import com.korea.jtos.Question.Question;
 import com.korea.jtos.Question.QuestionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -26,6 +27,7 @@ public class UserService {
     private final QuestionService questionService;
     private final AnswerService answerService;
     private final CommentService commentService;
+    private final ResourceLoader resourceLoader;
 
     public void create(String username, String email, String password) {
         SiteUser user = new SiteUser();
@@ -108,4 +110,38 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public String temp_url(MultipartFile file){
+        if(!file.isEmpty()){
+            try {
+                String path = resourceLoader.getResource("classpath:/static").getFile().getPath();
+                File fileFolder = new File("/image");
+                if(!fileFolder.exists()){
+                    fileFolder.mkdirs();
+                }
+                String filePath = "/image/" + UUID.randomUUID().toString()+"."+ file.getContentType().split("/")[1];
+                file.transferTo(Paths.get(path+filePath));
+                return filePath;
+            }catch (IOException ignored){
+
+            }
+        }
+        return null;
+    }
+
+    public void saveimage(SiteUser user,String url){
+        try{
+            String path = resourceLoader.getResource("classpath:/static").getFile().getPath();
+            if(user.getUrl() != null){
+                File oldFile = new File(path+user.getUrl());
+                if(oldFile.exists()){
+                    oldFile.delete();
+                }
+            }
+
+            user.setUrl(url);
+            userRepository.save(user);
+        }catch (IOException ignored){
+
+        }
+    }
 }
