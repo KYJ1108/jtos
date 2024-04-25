@@ -1,0 +1,40 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container-fluid my-3">
+
+<!-- 프로필 수정 모달 -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>프로필 수정</h2>
+        <form id="editProfileForm">
+            <label for="email">이메일:</label>
+            <input type="email" id="email" name="email">
+            <label for="profile">프로필:</label>
+            <textarea id="profile" name="profile"></textarea>
+            <button type="submit">저장</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 프로필 수정 모달을 열기 위한 함수
+    function openEditProfileModal() {
+        var modal = document.getElementById("editProfileModal");
+        modal.style.display = "block";
+    }
+
+    // 모달 닫기 버튼에 이벤트 리스너 추가
+    var closeButton = document.querySelector(".close");
+    closeButton.addEventListener("click", function() {
+        var modal = document.getElementById("editProfileModal");
+        modal.style.display = "none";
+    });
+
+    // 모달 밖을 클릭하면 모달이 닫히도록 설정
+    window.onclick = function(event) {
+        var modal = document.getElementById("editProfileModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>

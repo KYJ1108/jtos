@@ -1,0 +1,119 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container-fluid my-3">
+
+    <style>
+        .Basic{
+            margin: 50px auto 20px;
+            padding: 30px;
+            border: 1px solid gray;
+            border-radius: 10px;
+            width: 80%; /* 너비를 80%로 설정 */
+        }
+
+         .qac-container {
+            display: flex;
+            justify-content: space-between; /* 요소들을 가로로 동일한 간격으로 배치 */
+            width: 80%; /* 너비를 80%로 설정 */
+            margin: 0 auto; /* 가운데 정렬을 위해 추가 */
+         }
+
+        .qac {
+            padding: 30px;
+            border: 1px solid gray;
+            border-radius: 10px;
+        }
+
+        .question-section, .answer-section, .comment-section {
+            margin-top:10px;
+            width: 40%; /* 섹션 너비 */
+        }
+        .question-section{
+            margin-right: 10px; /* 각 섹션 사이의 간격 조절을 위한 여백 추가 */
+         }
+         .comment-section{
+            margin-left: 10px; /* 각 섹션 사이의 간격 조절을 위한 여백 추가 */
+         }
+
+        h3 {
+            border-bottom: 1px solid gray; /* 제목 아래에 라인 추가 */
+            padding-bottom: 10px; /* 제목 아래 여백 추가 */
+            margin-bottom: 10px; /* 제목 아래 여백 추가 */
+            text-align: center;
+        }
+        p {
+            border: 1px solid #E6E6E6;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .con{
+            border: 1px solid #E6E6E6;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container a {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #000;
+            cursor: pointer;
+            border: 1px solid gray;
+            border-radius: 10px;
+            width: 20%;
+        }
+    </style>
+
+    <div class="Basic">
+        <h3>Basic Information</h3>
+        <p>Username: <span th:text="${user.username}"></span></p>
+        <p>Email: <span th:text="${user.email}"></span></p>
+
+        <img id="preview" src="/default-profile-image.jpg" alt="Profile Image">
+        <input type="file" id="fileInput">
+
+        <form action="/user/profile/image/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="imageFile">
+            <input type="submit" value="Upload">
+        </form>
+
+        <div class="button-container">
+            <a onclick="editProfile()">프로필 수정</a>
+            <a th:href="@{/question/create}">질문 등록하기</a>
+        </div>
+    </div>
+
+    <div class="qac-container">
+    <div class="qac question-section">
+        <h3>Questions</h3>
+        <ul>
+            <li th:each="question : ${userQuestion}" class = "con">
+                <a th:href="@{/user/profile/{id}(id=${question.subject})}" th:text="${question.subject}"></a>
+            </li>
+        </ul>
+    </div>
+    <div class="qac answer-section">
+        <h3>Answers</h3>
+        <ul>
+            <li th:each="answer : ${userAnswer}" class = "con">
+                <a th:href="@{/user/profile/{id}(id=${answer.id})}" th:text="${answer.content}"></a>
+            </li>
+        </ul>
+    </div>
+    <div class="qac comment-section">
+        <h3>Comments</h3>
+        <ul>
+            <li th:each="comment : ${userComment}" class = "con">
+                <span th:text="${comment.content}"></span>
+            </li>
+        </ul>
+    </div>
+    </div>
+</div>
+</html>
