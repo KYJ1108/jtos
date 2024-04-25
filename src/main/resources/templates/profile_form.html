@@ -68,52 +68,65 @@
             border-radius: 10px;
             width: 20%;
         }
+
+        <!-- 프로필 사진 -->
+        .profile-photo{
+            margin: 10px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-photo img {
+            width: 100px; /* 너비 조절 */
+            height: 100px;
+            height: auto; /* 높이 자동 조절 */
+            display: block; /* 이미지를 블록 요소로 설정하여 가운데 정렬 */
+            margin: 0 auto 20px; /* 가운데 정렬 */
+        }
+
     </style>
 
     <div class="Basic">
         <h3>Basic Information</h3>
+
+        <div class="profile-photo">
+            <img id="img" src="/user.png">
+        </div>
+
         <p>Username: <span th:text="${user.username}"></span></p>
         <p>Email: <span th:text="${user.email}"></span></p>
 
-        <img id="preview" src="/default-profile-image.jpg" alt="Profile Image">
-        <input type="file" id="fileInput">
-
-        <form action="/user/profile/image/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="imageFile">
-            <input type="submit" value="Upload">
-        </form>
-
         <div class="button-container">
-            <a onclick="editProfile()">프로필 수정</a>
+            <a th:href="@{/user/modifyProfile}">프로필 수정</a>
             <a th:href="@{/question/create}">질문 등록하기</a>
         </div>
     </div>
 
     <div class="qac-container">
-    <div class="qac question-section">
-        <h3>Questions</h3>
-        <ul>
-            <li th:each="question : ${userQuestion}" class = "con">
-                <a th:href="@{/user/profile/{id}(id=${question.subject})}" th:text="${question.subject}"></a>
-            </li>
-        </ul>
-    </div>
-    <div class="qac answer-section">
-        <h3>Answers</h3>
-        <ul>
-            <li th:each="answer : ${userAnswer}" class = "con">
-                <a th:href="@{/user/profile/{id}(id=${answer.id})}" th:text="${answer.content}"></a>
-            </li>
-        </ul>
-    </div>
-    <div class="qac comment-section">
-        <h3>Comments</h3>
-        <ul>
-            <li th:each="comment : ${userComment}" class = "con">
-                <span th:text="${comment.content}"></span>
-            </li>
-        </ul>
-    </div>
+        <div class="qac question-section">
+            <h3>Questions</h3>
+            <ul>
+                <li th:each="question : ${userQuestion}" class = "con">
+                    <a th:href="@{/question/detail/{id}(id=${question.id})}" th:text="${question.subject}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="qac answer-section">
+            <h3>Answers</h3>
+            <ul>
+                <li th:each="answer : ${userAnswer}" class = "con">
+                    <a th:href="@{/question/detail/{id}(id=${answer.id})}" th:text="${answer.content}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="qac comment-section">
+            <h3>Comments</h3>
+            <ul>
+                <li th:each="comment : ${userComment}" class = "con">
+                    <a th:href="@{/question/detail/{id}(id=${comment.id})}" th:text="${comment.content}"></a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 </html>

@@ -8,6 +8,7 @@ import com.korea.jtos.DataNotFoundException;
 import com.korea.jtos.Question.Question;
 import com.korea.jtos.Question.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -69,19 +70,6 @@ public class UserService {
         }
     }
 
-    // 사용자가 작성한 질문 가져오기
-//    public List<Question> getQuestion(Long id) {
-//        return Collections.singletonList(questionService.getQuestion(Math.toIntExact(id)));
-//    }
-//    // 사용자가 작성한 답변 가져오기
-//    public List<Answer> getAnswer(Long id) {
-//        return Collections.singletonList(answerService.getAnswer(Math.toIntExact(id)));
-//    }
-//    // 사용자가 작성한 댓글 가져오기
-//    public List<Comment> getComment(Long id) {
-//        return Collections.singletonList(commentService.getComment(Math.toIntExact(id)));
-//    }
-
     public List<Question> getQuestionsByUserId(Long userId) {
         return questionService.getQuestionsByUserId(userId);
     }
@@ -101,4 +89,23 @@ public class UserService {
     public void save(SiteUser siteUser){
         this.userRepository.save(siteUser);
     }
+
+    public void updateProfile(String username, String newUsername, String email) throws CustomException {
+        // 데이터베이스에서 사용자를 검색합니다.
+        Optional<SiteUser> userOptional = userRepository.findByUsername(username);
+
+        if (!userOptional.isPresent()) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다");
+        }
+
+
+        // 사용자 정보를 업데이트합니다.
+        SiteUser user = userOptional.get();
+        user.setUsername(newUsername);
+        user.setEmail(email);
+
+        // 업데이트된 사용자를 데이터베이스에 다시 저장합니다.
+        userRepository.save(user);
+    }
+
 }
